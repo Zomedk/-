@@ -63,14 +63,12 @@
   .pfoot { font-size:11px; opacity:.82; margin-top:14px; border-top:1px solid rgba(255,255,255,.28); padding-top:8px; }
   .detail-sep { text-align:center; color:#9b938a; font-size:12.5px; margin:20px 0 6px; }
   
-  /* 优雅弹窗样式 */
+  /* 弹窗样式 */
   .modal-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center; padding:20px; }
   .modal-box { background:#fff; border-radius:12px; max-width:480px; width:100%; padding:22px; border-top:6px solid #9C3A2E; box-shadow:0 10px 30px rgba(0,0,0,0.25); text-align:center; animation: fadeIn 0.3s ease; }
   .modal-title { font-size:18px; font-weight:700; color:#9C3A2E; margin-bottom:12px; }
   .modal-text { font-size:14px; color:#4a463f; line-height:1.6; margin-bottom:20px; text-align:left; background:#faf7f1; padding:12px; border-radius:6px; border:1px dashed #d8cdbd; }
-  .modal-btn-group { display: flex; gap: 10px; }
-  .modal-btn { background:#9C3A2E; color:#fff; border:none; padding:12px 16px; font-size:14px; font-weight:700; border-radius:6px; cursor:pointer; flex: 1; text-decoration:none; box-shadow:0 4px 10px rgba(156,58,46,0.2); }
-  .modal-btn.secondary { background:#fff; color:#55504a; border:1px solid #d8cdbd; box-shadow:none; }
+  .modal-btn { background:#9C3A2E; color:#fff; border:none; padding:12px 24px; font-size:15px; font-weight:700; border-radius:6px; cursor:pointer; width:100%; display:block; text-decoration:none; box-shadow:0 4px 10px rgba(156,58,46,0.3); }
   @keyframes fadeIn { from { opacity:0; transform:scale(0.9); } to { opacity:1; transform:scale(1); } }
 </style>
 </head>
@@ -83,19 +81,19 @@
   </div>
 
   <div class="info">
-    <div style="font-size:13px; color:#9C3A2E; margin-bottom:8px; font-weight:bold;">📋 基础信息（选填，方便为您归档）：</div>
+    <div style="font-size:12px; color:#9C3A2E; margin-bottom:8px; font-weight:bold;">⚠️ 请先填写以下基础信息以解锁您的调理卡片（必填）：</div>
     <div class="info-row">
-      <label>姓名<input id="f-name" type="text" placeholder="怎么称呼您"></label>
-      <label>性别
+      <label>姓名<span style="color:red">*</span><input id="f-name" type="text" placeholder="怎么称呼您"></label>
+      <label>性别<span style="color:red">*</span>
         <select id="f-sex"><option value="">请选择</option><option>女</option><option>男</option></select>
       </label>
-      <label>年龄<input id="f-age" type="text" inputmode="numeric" placeholder="数字"></label>
+      <label>年龄<span style="color:red">*</span><input id="f-age" type="text" inputmode="numeric" placeholder="数字"></label>
     </div>
     <div class="info-row">
-      <label class="full">微信号<input id="f-wechat" type="text" placeholder="选填，方便老师后续为您发送调理指导"></label>
+      <label class="full">微信号<span style="color:red">*</span><input id="f-wechat" type="text" placeholder="请填写真实微信，方便老师发送调理指导"></label>
     </div>
     <div class="info-row">
-      <label class="full">主要不适（主诉）<input id="f-chief" type="text" placeholder="选填，当前最困扰您的主要症状"></label>
+      <label class="full">主要不适（主诉）<span style="color:red">*</span><input id="f-chief" type="text" placeholder="最困扰您的一两个症状"></label>
     </div>
   </div>
 
@@ -117,13 +115,15 @@
     </div>
 
     <div class="card accent" id="rescard"></div>
+
     <div class="card" id="yuxuecard" style="display:none;"></div>
+
     <div class="card" id="jikoucard"></div>
     <div class="card" id="yaoshicard"></div>
 
     <div class="card">
       <div style="font-weight:700;margin-bottom:8px;color:#2b2825;">备份或发给老师</div>
-      <div style="font-size:12.5px;color:#8a837a;margin-bottom:8px;">您的完整答卷和饼图数据（案例库格式）。您可以手动点击复制，发送给调理老师。</div>
+      <div style="font-size:12.5px;color:#8a837a;margin-bottom:8px;">您的完整答卷和饼图数据（案例库格式）。如果刚才跳转未成功，可以手动点下方「复制结果」手动发给老师。</div>
       <textarea class="export-area" id="exportText" readonly></textarea>
       <button class="copybtn" id="shareBtn" style="background:#07c160;">发到微信 / 分享</button>
       <button class="copybtn" id="copyBtn" style="background:#fff;color:#3f7e6a;border:1px solid #3f7e6a;margin-top:8px;">复制结果</button>
@@ -131,7 +131,7 @@
     </div>
 
     <div class="disc">
-      本结果只是基于问诊的<b>证型倾向参考</b>，不是诊断。情况复杂或有明确不适，请找专业医师当面辨证。
+      本结果只是基于问诊的<b>证型倾向参考</b>，不是诊断。书中强调四诊合参、抓主证，问诊本身偏主观，单一症状不作辨证；很多症状跨多个水火状态，需结合舌象与整体综合判断。一个层次解决后可能显出更深一层的水火状态。情况复杂或有明确不适，请找专业医师当面辨证。
     </div>
     <button class="btn ghost" id="again">重新测一次</button>
   </div>
@@ -140,16 +140,13 @@
 <!-- 自动跳转引导弹窗 -->
 <div class="modal-overlay" id="jumpModal">
   <div class="modal-box">
-    <div class="modal-title">🎉 您的水火体质卡片已在下方生成！</div>
+    <div class="modal-title">🎉 您的水火体质人格已生成</div>
     <div class="modal-text">
-      <b>💡 接下来建议：</b><br>
-      系统已为您<b>自动复制了完整的自测数据报告</b>。<br><br>
-      建议点击下方按钮去【提交调理申请】，在金数据表单最后一栏长按“粘贴”此数据，即可获得老师的深度解析和药食调理指导！
+      <b>💡 核心提示：</b><br>
+      为了防止退出后您的自测饼图和数据丢失，且方便老师后续为您<b>深度解析病机并定制药食建议</b>，系统已经为您<b>自动复制了原始报告数据</b>。<br><br>
+      请点击下方按钮前往【调理登记后台】，在最后一栏<b>长按“粘贴”</b>并点击提交，即可成功归档！
     </div>
-    <div class="modal-btn-group">
-      <button class="modal-btn secondary" id="closeModal">留在本页看饼图</button>
-      <button class="modal-btn" id="goToJinjv">去登记调理(保留本页)</button>
-    </div>
+    <button class="modal-btn" id="goToJinjv">前往登记调理方案（数据已复制）</button>
   </div>
 </div>
 
@@ -192,18 +189,32 @@ const PERSONA = {
 };
 
 const JIKOU = {
-  shuixie:{ title:"偏水邪（寒湿）", items:["生湿：甜食、糯米、银耳","生寒：生冷、鲜牛奶、带壳类水产、生茶"], life:"日常可多运动出汗，避开水上运动。" },
-  huoxie:{ title:"火邪（实热）", items:["生热：辛辣、煎炸、烘焙、烧烤、韭菜、红茶、咖啡、鸡、羊"], life:"火邪为主可多运动出汗，忌艾灸。" },
-  xuhuo:{ title:"水虚（虚热）", items:["生热：辛辣、煎炸、烘焙、烧烤、红茶、咖啡","生寒：生冷、鲜牛奶、带壳类水产"], life:"水虚为主以修养为主，忌艾灸。" },
-  lianghu:{ title:"虚证（虚寒）", items:["生寒：一切生冷、鲜牛奶、带壳类水产、生茶"], life:"以修养为主。" },
+  shuixie:{ title:"偏水邪（寒湿）", items:[
+    "生湿：甜食（天然糖除外）、糯米、银耳、芝士",
+    "生寒：一切生冷（生瓜果、蔬菜、刺身）、鲜牛奶（奶粉/常温酸奶可食）、带壳类水产、生茶（绿茶、生普等）、白酒黄酒等酒类" ],
+    life:"日常可多运动出汗，避开水上运动。" },
+  huoxie:{ title:"火邪（实热）", items:[
+    "生热：辛辣（葱姜蒜、胡椒花椒等）、煎炸、烘焙、烧烤、韭菜、红茶、咖啡、白酒黄酒等酒类、鸡、羊" ],
+    life:"火邪为主可多运动出汗，忌艾灸。" },
+  xuhuo:{ title:"水虚（虚热）", items:[
+    "生热：辛辣、煎炸、烘焙、烧烤、韭菜、红茶、咖啡、酒类、鸡、羊",
+    "生寒：一切生冷、鲜牛奶、带壳类水产、生茶（虚证亦忌生冷）" ],
+    life:"水虚为主以修养为主，忌艾灸。" },
+  lianghu:{ title:"虚证（虚寒）", items:[
+    "生寒：一切生冷（生瓜果、蔬菜、刺身）、鲜牛奶（奶粉/常温酸奶可食）、带壳类水产、生茶（绿茶、生普等）" ],
+    life:"以修养为主。" },
 };
+const FENGZHENG = { title:"厥阴热证 / 风证（主证在肝、火时另忌）", items:[
+  "生风：菌菇类、鸡鹅鸽、春菜（荠菜、香椿、草头、春笋）、酒类（黄酒、白酒为主）" ],
+  life:"以修养为主，不宜剧烈运动；建议尽快就医。" };
 
 const YAOSHI = {
-  shuixie:{ f:"祛水邪", items:"干姜、茯苓、新会陈皮、五指毛桃、赤小豆" },
-  huoxie: { f:"祛火邪", items:"蒲公英、莲子芯、菊花、绿豆、金银花" },
-  lianghu:{ f:"温（平）补正水 · 热补正火", items:"铁棍山药、芡实、桑葚、大枣、龙眼肉、枸杞" },
+  shuixie:{ f:"祛水邪", items:"干姜、茯苓、新会陈皮、薏米、五指毛桃、赤小豆、小黄姜" },
+  huoxie: { f:"祛火邪", items:"蒲公英、白果、莲子芯、菊花、绿豆、茵陈、决明子、绿茶、金银花" },
+  lianghu:{ f:"温（平）补正水 · 热补正火", items:"铁棍山药、芡实、桑葚、大枣、龙眼肉、枸杞；偏阳虚加扁豆、莲子肉" },
   xuhuo:  { f:"凉补正水", items:"荸荠、麦冬、玉竹、西洋参、石斛、百合" },
 };
+const SHUGAN = { f:"疏肝郁", items:"玫瑰等花类" };
 
 function W(hs, zang, yx){ return { hs: hs||{}, zang: zang||{}, yx: yx||0 }; }
 const Q = [
@@ -215,52 +226,106 @@ const Q = [
  {t:"scale", text:"手脚末端冰凉，但身体里却觉烦热（外冷内热）", w:W({huoxie:2},{gan:1})},
  {t:"scale", text:"又怕冷又怕热，一阵一阵切换", w:W({shuixie:2},{gan:1})},
  {sec:"出汗"},
- {t:"scale", text:"白天稍一活动就出汗（自汗）", w:W({lianghu:2},{pi:1,fei:1})},
+ {t:"scale", text:"白天稍一活动就出汗、汗多收不住（自汗）", w:W({lianghu:2},{pi:1,fei:1})},
  {t:"scale", text:"睡着后出汗（盗汗）", w:W({xuhuo:2},{shen:1})},
- {t:"scale", text:"出汗时身上发热、口渴", w:W({huoxie:2},{})},
+ {t:"scale", text:"出汗时身上发热、口渴（热出的汗）", w:W({huoxie:2},{})},
  {t:"scale", text:"平时很少出汗或无汗，且怕冷", w:W({shuixie:1},{shen:1})},
  {sec:"头与身"},
  {t:"scale", text:"头重、头闷，像裹着湿布", w:W({shuixie:2},{pi:1})},
  {t:"scale", text:"头两侧胀或痛，随情绪加重", w:W({shuixie:1},{gan:2})},
+ {t:"scale", text:"头痛剧烈、有灼热感、遇热更重", w:W({huoxie:2},{})},
+ {t:"scale", text:"头痛遇冷加重、得温能缓解", w:W({shuixie:2},{})},
+ {t:"scale", text:"头晕，发作较剧烈、天旋地转", w:W({huoxie:2},{gan:1})},
+ {t:"scale", text:"头晕，比较舒缓、伴乏力虚弱", w:W({lianghu:1,xuhuo:1},{})},
  {t:"scale", text:"身体困重、懒动", w:W({shuixie:2},{pi:1})},
+ {t:"scale", text:"关节发胀、发沉", w:W({shuixie:1},{pi:1})},
+ {t:"scale", text:"身上麻木，或有蚂蚁爬的感觉", w:W({xuhuo:2},{gan:1})},
+ {t:"scale", text:"皮肤痒、干燥脱屑、不出水（秋天重）", w:W({xuhuo:2},{gan:1})},
+ {t:"scale", text:"皮肤痒、起疹子、会出水", w:W({shuixie:1},{pi:1})},
+ {t:"scale", text:"容易抽筋", w:W({xuhuo:1,huoxie:1},{gan:1})},
  {t:"scale", text:"下肢或眼睑浮肿", w:W({shuixie:1,lianghu:1},{shen:1,pi:1})},
- {sec:"腰膝 · 精力"},
+ {t:"scale", text:"小便量少、不畅", w:W({lianghu:1},{shen:1})},
+ {sec:"腰膝 · 精力 · 耳"},
  {t:"scale", text:"腰酸、腿软、膝盖无力", w:W({xuhuo:1,lianghu:1},{shen:2})},
+ {t:"scale", text:"白头发偏多、早白", w:W({xuhuo:1},{shen:2})},
+ {t:"scale", text:"牙齿松动", w:W({xuhuo:1},{shen:1})},
+ {t:"scale", text:"耳鸣，声音低沉", w:W({xuhuo:1},{shen:1})},
+ {t:"scale", text:"记忆力下降、容易健忘", w:W({xuhuo:1,lianghu:1},{shen:1})},
  {t:"scale", text:"乏力，四肢肌肉松软无力", w:W({lianghu:2},{pi:1})},
  {sec:"大小便"},
  {t:"scale", text:"大便干燥、硬", w:W({huoxie:1,xuhuo:1},{})},
- {t:"scale", text:"大便稀溏、不成形", w:W({lianghu:2},{pi:1})},
+ {t:"scale", text:"大便不干，却几天一次、软而无力", w:W({lianghu:1,shuixie:1},{shen:1,pi:1})},
+ {t:"scale", text:"大便稀溏、不成形、有不消化食物", w:W({lianghu:2},{pi:1})},
  {t:"scale", text:"天亮前腹泻（五更泻）", w:W({lianghu:2},{shen:1})},
- {t:"scale", text:"大便黏腻、解后不爽", w:W({huoxie:1,shuixie:1},{pi:1})},
+ {t:"scale", text:"大便黏腻、解后不爽（湿热）", w:W({huoxie:1,shuixie:1},{pi:1})},
  {t:"scale", text:"小便清、量多、色白", w:W({lianghu:2},{shen:1,pi:1})},
  {t:"scale", text:"小便黄、气味重", w:W({huoxie:2},{})},
+ {t:"scale", text:"小便赤、灼热刺痛", w:W({huoxie:2},{gan:1,shen:1})},
  {sec:"饮食 · 口"},
+ {t:"scale", text:"食量大、总想吃，吃多反而不舒服", w:W({huoxie:2},{gan:1})},
+ {t:"scale", text:"能吃，但人偏瘦", w:W({xuhuo:2},{})},
  {t:"scale", text:"食欲差、吃一点就饱", w:W({lianghu:1,shuixie:1},{pi:1})},
  {t:"scale", text:"喜欢吃热的，怕吃凉", w:W({lianghu:1},{pi:1})},
+ {t:"scale", text:"反酸、烧心", w:W({huoxie:1},{gan:1})},
+ {t:"scale", text:"嗳气、想恶心", w:W({huoxie:1},{gan:1})},
  {t:"scale", text:"口渴想喝水，尤其想喝凉的", w:W({huoxie:1,xuhuo:1},{})},
+ {t:"scale", text:"口干，但并不太想喝水", w:W({shuixie:1,lianghu:1},{pi:1})},
  {t:"scale", text:"口苦", w:W({shuixie:1,huoxie:1},{gan:1})},
- {sec:"情绪 · 目"},
+ {sec:"胸腹 · 情绪 · 目"},
+ {t:"scale", text:"胸闷，随情绪起伏", w:W({shuixie:2},{gan:1})},
  {t:"scale", text:"经常想叹气（太息）", w:W({shuixie:1},{gan:1})},
  {t:"scale", text:"情绪抑郁、焦虑、寡欢", w:W({shuixie:2},{gan:1})},
  {t:"scale", text:"情绪暴躁、易怒", w:W({huoxie:2},{gan:1})},
- {t:"scale", text:"眼睛红、眼屎多", w:W({huoxie:2},{gan:1})},
+ {t:"scale", text:"肚子隐痛、喜温、喜按揉", w:W({lianghu:1},{pi:1})},
+ {t:"scale", text:"肚子烧灼样痛、痛处发热", w:W({huoxie:2},{gan:1})},
+ {t:"scale", text:"眼睛红、眼屎多、目赤", w:W({huoxie:2},{gan:1})},
  {t:"scale", text:"眼睛干涩、看东西模糊", w:W({xuhuo:1},{gan:1})},
- {sec:"舌象（符合的都勾，可多选）"},
- {t:"multi", text:"你的舌头有以下哪些特征？", opts:[
+ {sec:"舌象（对镜看舌头，符合的都勾，可多选）"},
+ {note:"健康舌相：舌质淡红（荷花色）、舌苔薄白、无齿痕、舌体柔软无僵硬震颤歪斜、舌下青筋细短（约舌下长1/3）。对照下面勾出符合的特征。"},
+ {t:"multi", text:"你的舌头有以下哪些特征？（可多选）", opts:[
     {l:"舌体偏胖", w:W({shuixie:2},{pi:1})},
     {l:"舌边有齿痕", w:W({shuixie:2},{pi:1})},
+    {l:"舌面水滑（湿润发亮）", w:W({shuixie:2},{pi:1})},
+    {l:"舌苔薄白腻", w:W({shuixie:2},{pi:1})},
     {l:"舌苔白厚腻", w:W({shuixie:2},{pi:1})},
+    {l:"舌苔白厚", w:W({shuixie:2},{pi:1})},
     {l:"舌质红", w:W({huoxie:2},{})},
     {l:"舌苔发黄", w:W({huoxie:2},{})},
     {l:"舌体偏瘦", w:W({xuhuo:2},{shen:1,fei:1})},
     {l:"舌面有裂纹", w:W({xuhuo:2},{})},
-    {l:"舌淡红、苔薄白（正常）", w:W()},
+    {l:"舌苔很少，或光面无苔", w:W({xuhuo:2},{shen:1,fei:1})},
+    {l:"舌淡红、苔薄白（正常，无上述特征勾此项）", w:W()},
  ]},
- {sec:"瘀血相关（不计入水火饼图）"},
- {t:"multi", text:"你有以下哪些情况？", opts:[
-    {l:"固定位置的刺痛（像针扎）", w:W({},{},2)},
+ {sec:"月经（女性可答，符合的都勾，可多选）"},
+ {t:"multi", text:"月经有以下哪些情况？（可多选）", opts:[
+    {l:"月经提前（先期）", w:W({huoxie:2},{gan:1})},
+    {l:"经量多，甚至崩漏", w:W({huoxie:2},{gan:1})},
+    {l:"经量偏少", w:W({xuhuo:1},{gan:1,shen:1})},
+    {l:"经色淡", w:W({xuhuo:1,lianghu:1},{})},
+    {l:"月经推迟（后期）", w:W({lianghu:1,shuixie:1},{pi:1})},
+    {l:"痛经，且喜温喜按（热敷能缓解）", w:W({lianghu:2},{pi:1,shen:1})},
+    {l:"经色暗、有血块", w:W({},{},2)},
+    {l:"经前乳房或小腹胀痛", w:W({shuixie:2},{gan:1})},
+    {l:"经期先后不定、紊乱", w:W({shuixie:1},{gan:1})},
+    {l:"经前情绪烦躁或低落", w:W({shuixie:1},{gan:1})},
+    {l:"月经规律、量色正常（正常）", w:W()},
+ ]},
+ {sec:"手诊（看手掌，可多选）"},
+ {note:"健康手掌：大小鱼际色泽红润均匀，无异常青色、白点、片状发红。"},
+ {t:"multi", text:"你的手掌有以下哪些？（可多选）", opts:[
+    {l:"大鱼际发青", w:W({shuixie:2},{pi:1})},
+    {l:"手掌有明显白点", w:W({shuixie:2},{pi:1})},
+    {l:"大鱼际片状发红", w:W({huoxie:2},{})},
+    {l:"小鱼际片状发红", w:W({huoxie:2},{})},
+    {l:"手掌色泽红润、无异常（正常）", w:W()},
+ ]},
+ {sec:"瘀血相关（单列，不计入水火饼图）"},
+ {note:"以下与瘀血有关，单独统计、不进入上面的水火饼图。"},
+ {t:"multi", text:"你有以下哪些情况？（可多选）", opts:[
+    {l:"固定位置的刺痛（像针扎、不游走）", w:W({},{},2)},
     {l:"静脉曲张、青筋暴露", w:W({},{},2)},
-    {l:"舌质偏暗或有瘀斑", w:W({},{},2)},
+    {l:"体检发现血管斑块（颈动脉/脑等）", w:W({},{},2)},
+    {l:"舌质偏暗", w:W({},{},2)},
     {l:"舌下青筋粗大、瘀堵", w:W({},{},2)},
  ]},
 ];
@@ -275,55 +340,79 @@ Q.forEach(item => {
   let h='<div class="q-text">'+item.text+'</div><div class="opts">';
   if(item.t==="scale"){ ["没有","偶尔","经常"].forEach((lab,i)=>{ h+='<div class="opt"><input type="radio" name="'+id+'" id="'+id+'_'+i+'" value="'+i+'"'+(i===0?' checked':'')+'><label for="'+id+'_'+i+'">'+lab+'</label></div>'; }); }
   else if(item.t==="multi"){ item.opts.forEach((o,i)=>{ h+='<div class="opt"><input type="checkbox" name="'+id+'" id="'+id+'_'+i+'" value="'+i+'"><label for="'+id+'_'+i+'">'+o.l+'</label></div>'; }); }
+  else { item.opts.forEach((o,i)=>{ h+='<div class="opt"><input type="radio" name="'+id+'" id="'+id+'_'+i+'" value="'+i+'"'+(i===item.opts.length-1?' checked':'')+'><label for="'+id+'_'+i+'">'+o.l+'</label></div>'; }); }
   h+='</div>'; box.innerHTML=h; quiz.appendChild(box);
 });
 const QMAP={}; let j=0; Q.forEach(it=>{ if(!it.sec && !it.note) QMAP["q"+(j++)]=it; });
 
 function renderPie(arr, total){
-  const cx=110, cy=110, R=100, r=58; let svg;
+  const cx=110, cy=110, R=100, r=58;
+  let svg;
   if(arr.length===1){
-    svg='<circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="'+HS[arr[0].k].color+'"></circle><circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="#fff"></circle>';
+    svg='<circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="'+HS[arr[0].k].color+'"></circle>'+
+        '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="#fff"></circle>'+
+        '<title>'+HS[arr[0].k].name+'：100%</title>';
   } else {
     let ang=-Math.PI/2, paths="";
     arr.forEach(x=>{
       const frac=x.v/total, a1=ang+frac*2*Math.PI, large=(a1-ang)>Math.PI?1:0;
-      const x0o=cx+R*Math.cos(ang), y0o=cy+R*Math.sin(ang); const x1o=cx+R*Math.cos(a1), y1o=cy+R*Math.sin(a1);
-      const x0i=cx+r*Math.cos(a1), y0i=cy+r*Math.sin(a1); const x1i=cx+r*Math.cos(ang), y1i=cy+r*Math.sin(ang);
-      paths+='<path d="M'+x0o+' '+y0o+' A'+R+' '+R+' 0 '+large+' 1 '+x1o+' '+y1o+' L'+x0i+' '+y0i+' A'+r+' '+r+' 0 '+large+' 0 '+x1i+' '+y1i+' Z" fill="'+HS[x.k].color+'" stroke="#fff" stroke-width="2"></path>';
+      const x0o=cx+R*Math.cos(ang), y0o=cy+R*Math.sin(ang);
+      const x1o=cx+R*Math.cos(a1), y1o=cy+R*Math.sin(a1);
+      const x0i=cx+r*Math.cos(a1), y0i=cy+r*Math.sin(a1);
+      const x1i=cx+r*Math.cos(ang), y1i=cy+r*Math.sin(ang);
+      paths+='<path d="M'+x0o+' '+y0o+' A'+R+' '+R+' 0 '+large+' 1 '+x1o+' '+y1o+' L'+x0i+' '+y0i+' A'+r+' '+r+' 0 '+large+' 0 '+x1i+' '+y1i+' Z" fill="'+HS[x.k].color+'" stroke="#fff" stroke-width="2"><title>'+HS[x.k].name+'：'+(frac*100).toFixed(0)+'%</title></path>';
       ang=a1;
     });
     svg=paths;
   }
-  document.getElementById("pie").innerHTML='<svg viewBox="0 0 220 220" width="240" height="240">'+svg+'</svg>';
+  document.getElementById("pie").innerHTML='<svg viewBox="0 0 220 220" width="240" height="240" role="img" aria-label="水火状态分布饼图">'+svg+'</svg>';
 }
 
 function compute(){
-  const hs={xuhuo:0,lianghu:0,shuixie:0,huoxie:0}; const zang={xin:0,gan:0,pi:0,fei:0,shen:0}; const zheng={}; let yuxue=0;
+  const hs={xuhuo:0,lianghu:0,shuixie:0,huoxie:0};
+  const zang={xin:0,gan:0,pi:0,fei:0,shen:0};
+  const zheng={};
+  let yuxue=0;
   function addZ(w,mul){ for(const s in w.hs){ for(const z in w.zang){ const key=s+"|"+z; zheng[key]=(zheng[key]||0)+(w.hs[s]+w.zang[z])*mul; } } }
   document.querySelectorAll(".q").forEach(box=>{
     const id=box.dataset.qid, type=box.dataset.qtype; const item=QMAP[id];
     if(type==="multi"){
       box.querySelectorAll('input[name="'+id+'"]:checked').forEach(cb=>{
-        const o=item.opts[parseInt(cb.value,10)]; for(const k in o.w.hs) hs[k]+=o.w.hs[k]; for(const k in o.w.zang) zang[k]+=o.w.zang[k]; yuxue += o.w.yx||0; addZ(o.w,1);
-      }); return;
+        const o=item.opts[parseInt(cb.value,10)];
+        for(const k in o.w.hs) hs[k]+=o.w.hs[k];
+        for(const k in o.w.zang) zang[k]+=o.w.zang[k];
+        yuxue += o.w.yx||0;
+        addZ(o.w,1);
+      });
+      return;
     }
     const sel=box.querySelector('input[name="'+id+'"]:checked'); if(!sel) return;
-    const v=parseInt(sel.value,10); let w=null, mul=1;
-    if(type==="scale"){ if(v===0) return; w=item.w; mul=v; }
-    for(const k in w.hs) hs[k]+=w.hs[k]*mul; for(const k in w.zang) zang[k]+=w.zang[k]*mul; yuxue += (w.yx||0)*mul; addZ(w,mul);
+    const v=parseInt(sel.value,10);
+    let w=null, mul=1;
+    if(type==="scale"){ if(v===0) return; w=item.w; mul=v; } else { w=item.opts[v].w; mul=1; }
+    for(const k in w.hs) hs[k]+=w.hs[k]*mul;
+    for(const k in w.zang) zang[k]+=w.zang[k]*mul;
+    yuxue += (w.yx||0)*mul;
+    addZ(w,mul);
   });
   return {hs,zang,yuxue,zheng};
 }
 
+function isEmptyW(w){ return !w || ((!w.hs||!Object.keys(w.hs).length)&&(!w.zang||!Object.keys(w.zang).length)&&!w.yx); }
 function cleanSec(s){ return (s||"").replace(/（.*$/,""); }
+
 function collectAnswers(){
   const bySec={}, order=[];
   document.querySelectorAll(".q").forEach(box=>{
-    const id=box.dataset.qid, type=box.dataset.qtype, sec=cleanSec(box.dataset.sec)||"其它"; const item=QMAP[id], picks=[];
+    const id=box.dataset.qid, type=box.dataset.qtype, sec=cleanSec(box.dataset.sec)||"其它";
+    const item=QMAP[id], picks=[];
     if(type==="multi"){
-      box.querySelectorAll('input[name="'+id+'"]:checked').forEach(cb=>{ const o=item.opts[parseInt(cb.value,10)]; if(o.w) picks.push(o.l); });
+      box.querySelectorAll('input[name="'+id+'"]:checked').forEach(cb=>{ const o=item.opts[parseInt(cb.value,10)]; if(!isEmptyW(o.w)) picks.push(o.l); });
     } else if(type==="scale"){
-      const sel=box.querySelector('input[name="'+id+'"]:checked'); const v=sel?parseInt(sel.value,10):0; if(v>0) picks.push(item.text+"（"+(v===1?"偶尔":"经常")+"）");
+      const sel=box.querySelector('input[name="'+id+'"]:checked'); const v=sel?parseInt(sel.value,10):0;
+      if(v>0) picks.push(item.text+"（"+(v===1?"偶尔":"经常")+"）");
+    } else {
+      const sel=box.querySelector('input[name="'+id+'"]:checked'); if(sel){ const o=item.opts[parseInt(sel.value,10)]; if(!isEmptyW(o.w)) picks.push(o.l); }
     }
     if(picks.length){ if(!bySec[sec]){bySec[sec]=[];order.push(sec);} bySec[sec]=bySec[sec].concat(picks); }
   });
@@ -331,93 +420,192 @@ function collectAnswers(){
 }
 
 function renderPersonaCard(key, arr, total, yuxue){
-  const p=PERSONA[key]; if(!p) return ""; const stateColor=HS[key.split("|")[0]].color;
-  const bars=arr.map(x=>{ const pct=(x.v/total*100).toFixed(0); return '<div class="pstat"><span class="pl">'+HS[x.k].name+'</span><span class="ptrack"><span class="pfill" style="width:'+pct+'%"></span></span><span>'+pct+'%</span></div>'; }).join("");
-  return '<div class="pcard" style="background:linear-gradient(135deg,'+stateColor+',#2b2825);"><div class="pcode">'+p.emoji+' '+p.code+'</div><div class="pslogan">「'+p.slogan+'」</div><div class="ppanel"><div class="ppanel-t">我的水火属性</div>'+bars+'</div><div class="pline"><b>特质：</b>'+p.cute+'</div><div class="pline"><b>忌口重点：</b>'+p.nemesis+'</div></div>';
+  const p=PERSONA[key]; if(!p) return "";
+  const stateColor=HS[key.split("|")[0]].color;
+  const bars=arr.map(x=>{
+    const pct=(x.v/total*100).toFixed(0);
+    return '<div class="pstat"><span class="pl">'+HS[x.k].name+'</span><span class="ptrack"><span class="pfill" style="width:'+pct+'%"></span></span><span>'+pct+'%</span></div>';
+  }).join("");
+  const badge = yuxue>0 ? ' ｜ 邪气：<span class="pbadge">瘀</span>' : '';
+  return '<div class="pcard" style="background:linear-gradient(135deg,'+stateColor+',#2b2825);">'+
+    '<div class="pcode">'+p.emoji+' '+p.code+'</div>'+
+    '<div class="pslogan">「'+p.slogan+'」</div>'+
+    '<div class="ppanel"><div class="ppanel-t">我的水火属性'+badge+'</div>'+bars+'</div>'+
+    '<div class="pline"><b>可爱点：</b>'+p.cute+'</div>'+
+    '<div class="pline"><b>死敌：</b>'+p.nemesis+'</div>'+
+    '<div class="pfoot">我的体质人格 · 水火辨证自测 | 内层证型：'+COMBO[key].z+'</div>'+
+  '</div>';
 }
 
 function buildExport(d){
   const g=id=>(document.getElementById(id).value||"").trim();
   const name=g("f-name"), sex=g("f-sex"), age=g("f-age"), chief=g("f-chief"), wechat=g("f-wechat");
+  const dt=new Date(), date=dt.getFullYear()+"-"+("0"+(dt.getMonth()+1)).slice(-2)+"-"+("0"+dt.getDate()).slice(-2);
   const {bySec,order}=collectAnswers();
-  let t="【水火辨证自测】\n";
-  if(d.personaKey && PERSONA[d.personaKey]) t+="体质："+PERSONA[d.personaKey].code+"\n";
-  t+="基本："+(name||"—")+" | "+(sex||"—")+" | "+(age||"—")+"岁\n微信："+(wechat||"—")+"\n主诉："+(chief||"—")+"\n";
-  t+="水火分布："+(d.arr.length?d.arr.map(x=>HS[x.k].name+" "+(x.v/d.total*100).toFixed(0)+"%").join("/ "):"—")+"\n";
-  if(d.topZheng.length){ t+="主要证型："+d.topZheng.map(x=>COMBO[x.k].z).join("、")+"\n"; }
-  if(d.yuxue>0) t+="兼有瘀血\n";
-  document.getElementById("exportText").value=t; return t;
+  let t="【水火辨证体质自测 · 结果】 "+date+"\n";
+  if(d.personaKey && PERSONA[d.personaKey]) t+="体质人格："+PERSONA[d.personaKey].code+"\n";
+  t+="姓名："+(name||"—")+" 性别："+(sex||"—")+" 年龄："+(age||"—")+"\n";
+  t+="微信号："+(wechat||"—")+"\n";
+  t+="主诉："+(chief||"—")+"\n\n";
+  t+="伴随症状 / 舌·手诊·瘀：\n";
+  if(order.length){ order.forEach(s=>{ t+="· "+s+"："+bySec[s].join("、")+"\n"; }); } else { t+="（未勾选明显症状）\n"; }
+  t+="\n主证（前2-3）：\n";
+  if(d.topZheng.length){ d.topZheng.forEach((x,i)=>{ t+=" "+(i+1)+". "+COMBO[x.k].z+" "+(x.v/d.zhTotal*100).toFixed(0)+"%\n"; }); }
+  else { t+="（未定位到具体证型）\n"; }
+  t+="水火分布："+(d.arr.length?d.arr.map(x=>HS[x.k].name+" "+(x.v/d.total*100).toFixed(0)+"%").join(" / "):"—")+"\n";
+  t+="五脏定位："+(d.zarr.length?d.zarr.map(x=>ZANG[x.k]+" "+(x.v/d.ztotal*100).toFixed(0)+"%").join(" / "):"—")+"\n";
+  if(d.yuxue>0) t+="瘀血：有（"+d.yuxue+"分，单列不入饼图）\n";
+  if(d.statesForDiet.length){
+    t+="\n忌口："+d.statesForDiet.map(s=>JIKOU[s]?JIKOU[s].title:"").filter(Boolean).join("、")+(d.topZheng.some(x=>x.k==='huoxie|gan')?"、厥阴热/风证":"")+"\n";
+    t+="药食："+d.statesForDiet.map(s=>YAOSHI[s]?YAOSHI[s].f:"").filter(Boolean).join("、")+(d.topZheng.some(x=>x.k==='shuixie|gan')?"、疏肝郁":"")+"\n";
+  }
+  t+="（日常体质参考，非诊断，请医师校订）";
+  document.getElementById("exportText").value=t;
+  return t;
 }
 
+// 终极复制功能（兼容各种手机浏览器与微信环境）
 function forceCopyText(text) {
-  const ta = document.getElementById("exportText"); ta.value = text;
-  ta.removeAttribute("readonly"); ta.focus(); ta.select(); document.execCommand("copy"); ta.setAttribute("readonly","readonly");
-  if(navigator.clipboard){ navigator.clipboard.writeText(text).catch(()=>{}); }
+  const ta = document.getElementById("exportText");
+  ta.value = text;
+  ta.removeAttribute("readonly"); ta.focus(); ta.select(); ta.setSelectionRange(0,99999);
+  let ok = false; try { ok = document.execCommand("copy"); } catch(e){}
+  ta.setAttribute("readonly","readonly");
+  if(!ok && navigator.clipboard){
+    navigator.clipboard.writeText(text).catch(()=>{});
+  }
 }
 
 function showResult(){
+  // 校验必填项
+  const g=id=>(document.getElementById(id).value||"").trim();
+  if(!g("f-name") || !g("f-sex") || !g("f-age") || !g("f-wechat") || !g("f-chief")){
+    alert("🔍 为了给您建立专属调理档案，请在最顶部完整填写姓名、性别、年龄、微信号和主要不适（均为必填项）！");
+    document.querySelector(".info").scrollIntoView({behavior:"smooth"});
+    return;
+  }
+
   const {hs,zang,yuxue,zheng}=compute();
-  let arr=Object.keys(hs).map(k=>({k,v:hs[k]})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v); const total=arr.reduce((s,x)=>s+x.v,0);
+  let arr=Object.keys(hs).map(k=>({k,v:hs[k]})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
+  const total=arr.reduce((s,x)=>s+x.v,0);
   document.getElementById("result").style.display="block";
 
   const yxCard=document.getElementById("yuxuecard");
-  if(yuxue>0){ yxCard.style.display="block"; yxCard.innerHTML='<div style="font-weight:700;color:#7a3b6e;">瘀血倾向</div><div class="res-line">检测到显著的全身瘀滞表现。建议调理时兼顾化瘀。</div>'; } else { yxCard.style.display="none"; }
+  if(yuxue>0){
+    yxCard.style.display="block";
+    yxCard.innerHTML='<div style="font-weight:700;margin-bottom:8px;color:#7a3b6e;">瘀血倾向（单列，不计入水火饼图）</div>'+
+      '<div class="res-line">出现瘀血相关表现 '+yuxue+' 分（刺痛固定、静脉曲张、血管斑块、舌质偏暗、舌下淤堵、经血块色深等）。</div>'+
+      '<div class="res-line"><b>忌口：</b>生瘀——无鳞鱼、动物内脏。</div>'+
+      '<div class="res-line" style="color:#8a837a;font-size:12.5px;margin-top:6px;">瘀血既是病理产物也是致病因素，建议结合脉象、由专业医师进一步判断。</div>';
+  } else { yxCard.style.display="none"; yxCard.innerHTML=""; }
 
   let finalReportText = "";
   if(total===0){
+    document.getElementById("personacard").innerHTML="";
+    document.getElementById("rescard").innerHTML='<div class="res-name">未见明显倾向</div><div class="res-line">勾选的症状很少，可能接近平人（正水正火平衡、无邪），也可能是题目没覆盖到，欢迎反馈调整。</div>';
+    document.getElementById("legend").innerHTML=""; document.getElementById("zangbars").innerHTML="";
+    document.getElementById("jikoucard").innerHTML=""; document.getElementById("yaoshicard").innerHTML="";
+    document.getElementById("pie").innerHTML="";
     finalReportText = buildExport({arr:[],total:1,zarr:[],ztotal:1,topZheng:[],zhTotal:1,statesForDiet:[],yuxue:yuxue,personaKey:null});
   } else {
     renderPie(arr, total);
     document.getElementById("legend").innerHTML=arr.map(x=>'<span><i class="dot" style="background:'+HS[x.k].color+'"></i>'+HS[x.k].name+' '+(x.v/total*100).toFixed(0)+'%</span>').join("");
-    let zarr=Object.keys(zang).map(k=>({k,v:zang[k]})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v); const ztotal=zarr.reduce((s,x)=>s+x.v,0)||1;
-    document.getElementById("zangbars").innerHTML = zarr.map(x=>{ const pct=(x.v/ztotal*100).toFixed(0); return '<div class="bar-row"><span class="bar-label">'+ZANG[x.k]+'</span><span class="bar-track"><span class="bar-fill" style="width:'+pct+'%"></span></span><span class="bar-val">'+pct+'%</span></div>'; }).join("");
+
+    let zarr=Object.keys(zang).map(k=>({k,v:zang[k]})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
+    const ztotal=zarr.reduce((s,x)=>s+x.v,0)||1;
+    document.getElementById("zangbars").innerHTML = zarr.length ? zarr.map(x=>{
+      const pct=(x.v/ztotal*100).toFixed(0);
+      return '<div class="bar-row"><span class="bar-label">'+ZANG[x.k]+'</span>'+
+        '<span class="bar-track"><span class="bar-fill" style="width:'+pct+'%"></span></span>'+
+        '<span class="bar-val">'+pct+'% <span style="color:#9b938a">'+x.v+'分</span></span></div>';
+    }).join("") : '<div class="res-line">本次未明显指向某一脏。</div>';
 
     const BASIC8=["shuixie|pi","lianghu|pi","lianghu|shen","xuhuo|shen","huoxie|pi","huoxie|gan","shuixie|gan","xuhuo|gan"];
-    let zhArr=BASIC8.map(k=>({k,v:zheng[k]||0})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v); const zhTotal=zhArr.reduce((s,x)=>s+x.v,0)||1;
-    const topZheng=zhArr.slice(0,3); const statesForDiet = topZheng.length ? [...new Set(topZheng.map(x=>x.k.split("|")[0]))] : [arr[0].k];
+    let zhArr=BASIC8.map(k=>({k,v:zheng[k]||0})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
+    const zhTotal=zhArr.reduce((s,x)=>s+x.v,0)||1;
+    const topZheng=zhArr.slice(0,3);
+    const statesForDiet = topZheng.length ? [...new Set(topZheng.map(x=>x.k.split("|")[0]))] : [arr[0].k];
     const personaKey = topZheng.length ? topZheng[0].k : null;
     document.getElementById("personacard").innerHTML = personaKey ? renderPersonaCard(personaKey, arr, total, yuxue) : "";
 
-    let html='<div class="res-name">你的倾向证型</div>';
-    topZheng.forEach((x,i)=>{ html+='<div class="res-line"><b>'+(i+1)+'. '+COMBO[x.k].z+'</b><br><span style="color:#7d6b58;">治法：'+COMBO[x.k].f+' | 代表方：'+COMBO[x.k].r+'</span></div>'; });
+    let html='<div class="res-name">你的主要证型</div>';
+    if(topZheng.length){
+      html+='<div class="res-line" style="color:#8a837a;">取最主要的 2–3 种：</div>';
+      topZheng.forEach((x,i)=>{
+        const c=COMBO[x.k];
+        html+='<div class="res-line" style="margin-top:8px;"><b>'+(i+1)+'. '+c.z+'</b> '+(x.v/zhTotal*100).toFixed(0)+'%'+
+          '<br><span style="color:#7d6b58;">治法：'+c.f+' | 代表方：'+c.r+'</span></div>';
+      });
+    } else {
+      html+='<div class="res-line">暂落不到具体证型。当前主状态：'+HS[arr[0].k].name+'。</div>';
+    }
     document.getElementById("rescard").innerHTML=html;
 
-    let jkH='<div style="font-weight:700;margin-bottom:8px;">建议忌口</div>';
-    statesForDiet.forEach(s=>{ if(JIKOU[s]) JIKOU[s].items.forEach(it=> jkH+='<div class="res-line">· '+it+'</div>'); });
+    let jkH='<div style="font-weight:700;margin-bottom:8px;color:#2b2825;">忌口建议</div>';
+    statesForDiet.forEach(s=>{
+      const jk=JIKOU[s]; if(!jk) return;
+      jkH+='<div class="res-line" style="margin-top:6px;"><b>'+jk.title+'：</b></div>';
+      jk.items.forEach(it=> jkH+='<div class="res-line">· '+it+'</div>');
+    });
     document.getElementById("jikoucard").innerHTML=jkH;
 
-    let ysH='<div style="font-weight:700;margin-bottom:8px;">药食参考</div>';
-    statesForDiet.forEach(s=>{ if(YAOSHI[s]) ysH+='<div class="res-line"><b>'+YAOSHI[s].f+'：</b>'+YAOSHI[s].items+'</div>'; });
+    let ysH='<div style="font-weight:700;margin-bottom:8px;color:#2b2825;">药食同源（初步建议）</div>';
+    statesForDiet.forEach(s=>{ const ys=YAOSHI[s]; if(ys) ysH+='<div class="res-line"><b>'+ys.f+'：</b>'+ys.items+'</div>'; });
     document.getElementById("yaoshicard").innerHTML=ysH;
 
     finalReportText = buildExport({arr,total,zarr,ztotal,topZheng,zhTotal,statesForDiet,yuxue,personaKey});
   }
 
-  // 原地完成复制 + 唤醒弹窗提示
+  // 1. 触发数据强力复制
   forceCopyText(finalReportText);
+
+  // 2. 唤起自动收单弹窗引导
   document.getElementById("jumpModal").style.display = "flex";
+  
   document.getElementById("result").scrollIntoView({behavior:"smooth"});
 }
 
-// 金数据登记：新窗口(新标签页)打开！彻底保留当前网页的饼图
+// 弹窗里的金数据按钮一键传参跳转
 document.getElementById("goToJinjv").addEventListener("click", function(){
   const g=id=>encodeURIComponent((document.getElementById(id).value||"").trim());
-  const targetUrl = `https://at6t8wve.jsjform.com/f/pZahGE?field_1=${g("f-name")}&field_2=${g("f-sex")}&field_3=${g("f-wechat")}&field_4=${g("f-chief")}`;
   
-  window.open(targetUrl, '_blank'); // 🔥 关键修改：用新标签页打开，绝不搞强制覆盖！
-  document.getElementById("jumpModal").style.display = "none";
-});
-
-document.getElementById("closeModal").addEventListener("click", function(){
-  document.getElementById("jumpModal").style.display = "none";
+  // 提取用户填的内容，拼装成金数据自动填表链接
+  const name = g("f-name");
+  const sex = g("f-sex");
+  const wechat = g("f-wechat");
+  const chief = g("f-chief");
+  
+  // 拼接金数据官方预填 API 规则：链接 + ?field_X=内容
+  // 对应：姓名(field_1), 性别(field_2), 微信号(field_3), 主要症状(field_4)
+  const targetUrl = `https://at6t8wve.jsjform.com/f/pZahGE?field_1=${name}&field_2=${sex}&field_3=${wechat}&field_4=${chief}`;
+  
+  // 实施强力跳转
+  window.location.href = targetUrl;
 });
 
 document.getElementById("calc").addEventListener("click",showResult);
-document.getElementById("copyBtn").addEventListener("click",function(){
-  forceCopyText(document.getElementById("exportText").value);
-  document.getElementById("copyTip").textContent = "✓ 复制成功！";
+
+document.getElementById("shareBtn").addEventListener("click",function(){
+  const ta=document.getElementById("exportText"), tip=document.getElementById("copyTip");
+  if(navigator.share){
+    navigator.share({title:"水火辨证体质自测结果", text:ta.value})
+      .then(()=>{tip.textContent="已打开分享面板，选择微信发送";})
+      .catch(()=>{});
+  } else {
+    forceCopyText(ta.value);
+    tip.textContent = "已自动复制自测数据，请到微信直接粘贴发给老师。";
+  }
 });
+
+document.getElementById("copyBtn").addEventListener("click",function(){
+  const ta=document.getElementById("exportText"), tip=document.getElementById("copyTip");
+  forceCopyText(ta.value);
+  tip.textContent = "✓ 已复制，粘贴到微信发给老师或登记后台即可";
+});
+
 document.getElementById("again").addEventListener("click",()=>{
+  document.querySelectorAll(".q").forEach(box=>{ box.querySelectorAll('input[type="checkbox"]').forEach(c=>c.checked=false); const f=box.querySelector('input[type="radio"]'); if(f) f.checked=true; });
+  document.getElementById("exportText").value=""; document.getElementById("copyTip").textContent="";
   document.getElementById("result").style.display="none"; window.scrollTo({top:0,behavior:"smooth"});
 });
 </script>
