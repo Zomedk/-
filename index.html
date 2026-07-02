@@ -70,6 +70,7 @@
   .modal-text { font-size:14px; color:#4a463f; line-height:1.6; margin-bottom:20px; text-align:left; background:#faf7f1; padding:12px; border-radius:6px; border:1px dashed #d8cdbd; }
   .modal-btn { background:#9C3A2E; color:#fff; border:none; padding:12px 24px; font-size:15px; font-weight:700; border-radius:6px; cursor:pointer; width:100%; display:block; text-decoration:none; box-shadow:0 4px 10px rgba(156,58,46,0.3); }
   @keyframes fadeIn { from { opacity:0; transform:scale(0.9); } to { opacity:1; transform:scale(1); } }
+  .submit-btn { background:#3F7E8C; margin-top:10px; }
 </style>
 </head>
 <body>
@@ -121,6 +122,15 @@
     <div class="card" id="jikoucard"></div>
     <div class="card" id="yaoshicard"></div>
 
+    <!-- 新增：提交登记按钮 -->
+    <div class="card" style="border-color:#3F7E8C;">
+      <div style="font-weight:700;margin-bottom:8px;color:#3F7E8C;">📋 提交报告给老师</div>
+      <div style="font-size:13px;color:#8a837a;margin-bottom:10px;">
+        您的完整报告已自动复制到剪贴板。点击下方按钮前往登记后台，在「水火自测原始数据」框中长按粘贴即可。
+      </div>
+      <button class="btn submit-btn" id="submitToRegister">📋 提交我的报告给老师（去登记后台）</button>
+    </div>
+
     <div class="card">
       <div style="font-weight:700;margin-bottom:8px;color:#2b2825;">备份或发给老师</div>
       <div style="font-size:12.5px;color:#8a837a;margin-bottom:8px;">您的完整答卷和饼图数据（案例库格式）。如果刚才跳转未成功，可以手动点下方「复制结果」手动发给老师。</div>
@@ -140,13 +150,16 @@
 <!-- 自动跳转引导弹窗 -->
 <div class="modal-overlay" id="jumpModal">
   <div class="modal-box">
-    <div class="modal-title">🎉 您的水火体质人格已生成</div>
+    <div class="modal-title">✅ 数据已自动复制</div>
     <div class="modal-text">
-      <b>💡 核心提示：</b><br>
-      为了防止退出后您的自测饼图和数据丢失，且方便老师后续为您<b>深度解析病机并定制药食建议</b>，系统已经为您<b>自动复制了原始报告数据</b>。<br><br>
-      请点击下方按钮前往【调理登记后台】，在最后一栏<b>长按“粘贴”</b>并点击提交，即可成功归档！
+      <b>您的自测报告已复制到剪贴板！</b><br><br>
+      点击下方按钮前往登记后台：<br>
+      ① 填写姓名、性别、微信号等基础信息<br>
+      ② 在「水火自测原始数据」框 <b>长按粘贴</b><br>
+      ③ 提交即可<br><br>
+      <span style="color:#999;font-size:13px;">如果粘贴失败，可手动复制结果框中的内容。</span>
     </div>
-    <button class="modal-btn" id="goToJinjv">前往登记调理方案（数据已复制）</button>
+    <button class="modal-btn" id="goToJinjv">前往登记后台</button>
   </div>
 </div>
 
@@ -556,34 +569,29 @@ function showResult(){
     finalReportText = buildExport({arr,total,zarr,ztotal,topZheng,zhTotal,statesForDiet,yuxue,personaKey});
   }
 
-  // 1. 触发数据强力复制
+  // 只复制数据，不弹窗（弹窗改为由「提交报告」按钮触发）
   forceCopyText(finalReportText);
-
-  // 2. 唤起自动收单弹窗引导
-  document.getElementById("jumpModal").style.display = "flex";
-  
   document.getElementById("result").scrollIntoView({behavior:"smooth"});
 }
 
-// 弹窗里的金数据按钮一键传参跳转
-document.getElementById("goToJinjv").addEventListener("click", function(){
-  const g=id=>encodeURIComponent((document.getElementById(id).value||"").trim());
-  
-  // 提取用户填的内容，拼装成金数据自动填表链接
-  const name = g("f-name");
-  const sex = g("f-sex");
-  const wechat = g("f-wechat");
-  const chief = g("f-chief");
-  
-  // 拼接金数据官方预填 API 规则：链接 + ?field_X=内容
-  // 对应：姓名(field_1), 性别(field_2), 微信号(field_3), 主要症状(field_4)
-  const targetUrl = `https://at6t8wve.jsjform.com/f/pZahGE?field_1=${name}&field_2=${sex}&field_3=${wechat}&field_4=${chief}`;
-  
-  // 实施强力跳转
-  window.location.href = targetUrl;
+// ===== 事件绑定 =====
+
+document.getElementById("calc").addEventListener("click", showResult);
+
+// 新增：「提交报告给老师」按钮 → 显示弹窗
+document.getElementById("submitToRegister").addEventListener("click", function(){
+  // 确保文本框里有最新数据
+  const ta = document.getElementById("exportText");
+  if (ta.value) {
+    forceCopyText(ta.value);
+  }
+  document.getElementById("jumpModal").style.display = "flex";
 });
 
-document.getElementById("calc").addEventListener("click",showResult);
+// 弹窗内「前往登记后台」→ 跳转金数据
+document.getElementById("goToJinjv").addEventListener("click", function(){
+  window.location.href = "https://at6t8wve.jsjform.com/f/pZahGE";
+});
 
 document.getElementById("shareBtn").addEventListener("click",function(){
   const ta=document.getElementById("exportText"), tip=document.getElementById("copyTip");
